@@ -1,0 +1,26 @@
+{
+  "name": "create-serverless-aws-webhook",
+  "version": "0.1.0",
+  "bin": {
+    "create-serverless-aws-webhook": "bin/create-serverless-aws-webhook.js"
+  },
+  "scripts": {
+    "build": "echo \"The build step is not required when using JavaScript!\" && exit 0",
+    "cdk": "cdk",
+    "test": "jest"
+  },
+  "devDependencies": {
+    "aws-cdk": "2.144.0",
+    "jest": "^29.7.0"
+  },
+  "dependencies": {
+    "@aws-cdk/aws-apigateway": "^1.204.0",
+    "@aws-cdk/aws-lambda": "^1.204.0",
+    "@aws-cdk/aws-lambda-event-sources": "^1.204.0",
+    "@aws-cdk/aws-sns": "^1.204.0",
+    "@aws-cdk/aws-sns-subscriptions": "^1.204.0",
+    "@aws-cdk/aws-sqs": "^1.204.0",
+    "aws-cdk-lib": "2.144.0",
+    "constructs": "^10.0.0"
+  }
+}
