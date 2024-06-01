@@ -8,7 +8,7 @@ const { SqsSubscription } = require('aws-cdk-lib/aws-sns-subscriptions');
 const { Stack, Duration } = require('aws-cdk-lib');
 // const sqs = require('aws-cdk-lib/aws-sqs');
 
-class CreateServerlessAwsWebhookStack extends cdk.Stack {
+export class CreateServerlessAwsWebhookStack extends cdk.Stack {
   constructor(scope, id, props) {
     super(scope, id, props);
 
@@ -30,7 +30,7 @@ class CreateServerlessAwsWebhookStack extends cdk.Stack {
           console.log("EVENT: ", JSON.stringify(event, null, 2));
           return {
             statusCode: 200,
-            body: JSON.stringify({ message: "Hello from Lambda!" })
+            body: JSON.stringify({ message: "Hello from Lambda!", event })
           };
         };
       `),
@@ -60,4 +60,4 @@ class CreateServerlessAwsWebhookStack extends cdk.Stack {
   }
 }
 
-module.exports = { CreateServerlessAwsWebhookStack };
+// module.exports = { CreateServerlessAwsWebhookStack };

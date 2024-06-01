@@ -1,5 +1,5 @@
 {
-  "app": "node bin/create-serverless-aws-webhook.js",
+  "app": "npx ts-node bin/create-serverless-aws-webhook.ts",
   "watch": {
     "include": [
       "**"
@@ -15,6 +15,8 @@
     ]
   },
   "context": {
+    "profile": "localstack",
+    "region": "eu-west-3",
     "@aws-cdk/aws-lambda:recognizeLayerVersion": true,
     "@aws-cdk/core:checkSecretUsage": true,
     "@aws-cdk/core:target-partitions": [
