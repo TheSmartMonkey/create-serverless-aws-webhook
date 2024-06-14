@@ -1,5 +1,5 @@
 {
-  "app": "npx ts-node bin/create-serverless-aws-webhook.ts",
+  "app": "npx ts-node --prefer-ts-exts bin/create-serverless-aws-webhook.ts",
   "watch": {
     "include": [
       "**"
@@ -7,7 +7,9 @@
     "exclude": [
       "README.md",
       "cdk*.json",
-      "jest.config.js",
+      "**/*.d.ts",
+      "**/*.js",
+      "tsconfig.json",
       "package*.json",
       "yarn.lock",
       "node_modules",
@@ -15,8 +17,6 @@
     ]
   },
   "context": {
-    "profile": "localstack",
-    "region": "eu-west-3",
     "@aws-cdk/aws-lambda:recognizeLayerVersion": true,
     "@aws-cdk/core:checkSecretUsage": true,
     "@aws-cdk/core:target-partitions": [
