@@ -8,7 +8,9 @@
     "build": "tsc",
     "watch": "tsc -w",
     "test": "jest",
-    "cdk": "cdk"
+    "cdk": "cdk",
+    "local:build": "npx cdklocal bootstrap --profile localstack",
+    "local:deploy": "npx cdklocal deploy --profile localstack"
   },
   "dependencies": {
     "@aws-sdk/client-sqs": "^3.598.0",
