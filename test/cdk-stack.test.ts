@@ -1,7 +1,7 @@
 import { DeleteMessageCommand, ReceiveMessageCommand, SQSClient, SendMessageCommand } from '@aws-sdk/client-sqs';
 import * as cdk from 'aws-cdk-lib';
 import { Template } from 'aws-cdk-lib/assertions';
-import * as CreateServerlessAwsWebhook from '../lib/create-serverless-aws-webhook-stack';
+import { CdkStack } from '../src/cdk-stack';
 
 const sqsClient = new SQSClient({
   region: 'us-east-1',
@@ -16,7 +16,7 @@ describe('CreateServerlessAwsWebhook unit', () => {
     const app = new cdk.App();
 
     // When
-    const stack = new CreateServerlessAwsWebhook.CreateServerlessAwsWebhookStack(app, 'MyTestStack');
+    const stack = new CdkStack(app, 'MyTestStack');
     const template = Template.fromStack(stack);
 
     // Then
