@@ -1,5 +1,5 @@
+import { PublishCommand, SNSClient } from '@aws-sdk/client-sns';
 import { DeleteMessageCommand, ReceiveMessageCommand, SQSClient, SendMessageCommand } from '@aws-sdk/client-sqs';
-import { SNSClient, PublishCommand } from '@aws-sdk/client-sns';
 import * as cdk from 'aws-cdk-lib';
 import { Template } from 'aws-cdk-lib/assertions';
 import { CdkStack } from '../src/cdk-stack';
@@ -34,7 +34,7 @@ describe('CreateServerlessAwsWebhook unit', () => {
     template.resourceCountIs('AWS::SNS::Topic', 1);
   });
 
-  test('should send an event to SQS and verify it is in the queue', async () => {
+  test('should send a message to SQS and verify it is in the queue', async () => {
     // Define the message to send
     const messageBody = {
       message: 'fakeMessage',
@@ -58,9 +58,10 @@ describe('CreateServerlessAwsWebhook unit', () => {
     const { Messages } = await sqsClient.send(new ReceiveMessageCommand(receiveParams));
 
     // Verify the message is in the queue
+    console.log(Messages);
     expect(Messages).not.toBeUndefined();
-    expect(Messages?.length).toBeGreaterThan(0);
-    const receivedMessage = JSON.parse((Messages as any)[0].Body);
+    expect(Messages?.length).toEqual(1);
+    const receivedMessage = JSON.parse(JSON.parse((Messages as any)[0].Body).Message);
     expect(receivedMessage).toEqual(messageBody);
 
     // Clean up by deleting the message from the queue
@@ -72,7 +73,7 @@ describe('CreateServerlessAwsWebhook unit', () => {
     await sqsClient.send(new DeleteMessageCommand(deleteParams));
   });
 
-  test('should send an event to SNS and verify it is in the SQS queue', async () => {
+  test('should send a message to SNS and verify it is in the SQS queue', async () => {
     // Define the message to send
     const messageBody = {
       message: 'fakeMessage',
@@ -97,7 +98,7 @@ describe('CreateServerlessAwsWebhook unit', () => {
 
     // Verify the message is in the queue
     expect(Messages).not.toBeUndefined();
-    expect(Messages?.length).toBeGreaterThan(0);
+    expect(Messages?.length).toEqual(1);
     const receivedMessage = JSON.parse(JSON.parse((Messages as any)[0].Body).Message);
     expect(receivedMessage).toEqual(messageBody);
 

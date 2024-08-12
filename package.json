@@ -9,8 +9,10 @@
     "watch": "tsc -w",
     "test": "jest",
     "cdk": "cdk",
-    "local:build": "npx cdklocal bootstrap --profile localstack",
-    "local:deploy": "npx cdklocal deploy --profile localstack"
+    "local": "npm run local:start && npm run local:build && npm run local:deploy",
+    "local:start": "localstack start -d",
+    "local:build": "cdklocal bootstrap --profile localstack",
+    "local:deploy": "cdklocal deploy --profile localstack"
   },
   "dependencies": {
     "@aws-sdk/client-sns": "^3.629.0",
@@ -22,6 +24,7 @@
     "@types/jest": "^29.5.12",
     "@types/node": "20.12.7",
     "aws-cdk": "2.144.0",
+    "aws-cdk-local": "^2.18.0",
     "jest": "^29.7.0",
     "ts-jest": "^29.1.2",
     "ts-node": "^10.9.2",
