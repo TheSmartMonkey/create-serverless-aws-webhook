@@ -9,10 +9,13 @@ export class CreateServerlessAwsWebhookStack extends Stack {
     super(scope, id, props);
 
     const queue = new sqs.Queue(this, 'CreateServerlessAwsWebhookQueue', {
-      visibilityTimeout: Duration.seconds(10)
+      queueName: 'CreateServerlessAwsWebhookQueue',
+      visibilityTimeout: Duration.seconds(10),
     });
 
-    const topic = new sns.Topic(this, 'CreateServerlessAwsWebhookTopic');
+    const topic = new sns.Topic(this, 'CreateServerlessAwsWebhookTopic', {
+      topicName: 'CreateServerlessAwsWebhookTopic',
+    });
 
     topic.addSubscription(new subs.SqsSubscription(queue));
   }

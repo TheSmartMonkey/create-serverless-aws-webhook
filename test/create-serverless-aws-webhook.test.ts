@@ -8,17 +8,18 @@ const sqsClient = new SQSClient({
   endpoint: 'http://127.0.0.1:4566',
 });
 
-const QUEUE_URL = 'http://127.0.0.1:4566/000000000000/CreateServerlessAwsWebhookSta-CreateServerlessAwsWebho-5f7c5bf5';
+const QUEUE_URL = 'http://localhost:4566/000000000000/CreateServerlessAwsWebhookQueue';
 
 describe('CreateServerlessAwsWebhook unit', () => {
   test('SQS Queue and SNS Topic Created', () => {
+    // Given
     const app = new cdk.App();
-    // WHEN
-    const stack = new CreateServerlessAwsWebhook.CreateServerlessAwsWebhookStack(app, 'MyTestStack');
-    // THEN
 
+    // When
+    const stack = new CreateServerlessAwsWebhook.CreateServerlessAwsWebhookStack(app, 'MyTestStack');
     const template = Template.fromStack(stack);
 
+    // Then
     template.hasResourceProperties('AWS::SQS::Queue', {
       VisibilityTimeout: 10,
     });
