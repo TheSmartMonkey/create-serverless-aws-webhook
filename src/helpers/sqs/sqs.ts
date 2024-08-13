@@ -2,6 +2,7 @@
  * @group unit
  */
 
+import { randomUUID } from '@/helpers/helper';
 import {
   Message,
   PurgeQueueCommand,
@@ -13,7 +14,6 @@ import {
   SendMessageBatchRequest,
   SendMessageBatchRequestEntry,
 } from '@aws-sdk/client-sqs';
-import { randomUUID } from './helper';
 
 export async function sendSqsMessages<T>(sqsClient: SQSClient, queueUrl: string, messages: T[]): Promise<void> {
   const params: SendMessageBatchRequest = {

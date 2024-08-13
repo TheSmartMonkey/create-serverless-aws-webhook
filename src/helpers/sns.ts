@@ -8,8 +8,3 @@ export async function sendSnsMessage<T>(snsClient: SNSClient, topicArn: string, 
 
   await snsClient.send(new PublishCommand(publishParams));
 }
-
-// export function formatSnsRecevedMessages<T>(messages: Message[]): T {
-//   const msg = JSON.parse(messages as any);
-//   return msg.map((m: Message) => JSON.parse(m?.Body || '').Message);
-// }

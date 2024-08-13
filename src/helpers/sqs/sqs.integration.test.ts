@@ -4,7 +4,7 @@
 
 import { SNSClient } from '@aws-sdk/client-sns';
 import { SQSClient } from '@aws-sdk/client-sqs';
-import { initIntegrationTest } from '../../test/integration-test';
+import { initIntegrationTest } from '@test/integration-test';
 import { deleteAllSqsMessages, getSqsMessage, sendSqsMessages } from './sqs';
 
 jest.setTimeout(20000);

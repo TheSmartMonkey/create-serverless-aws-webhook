@@ -2,7 +2,7 @@
  * @group unit
  */
 
-import { fakeSqsMessage } from '../../test/fake';
+import { fakeSqsMessage } from '@test/fake';
 import { formatSqsRecevedMessages } from './sqs';
 
 describe('Sqs unit', () => {
