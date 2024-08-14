@@ -5,22 +5,26 @@
     "create-serverless-aws-webhook": "bin/create-serverless-aws-webhook.js"
   },
   "scripts": {
-    "build": "tsc",
-    "watch": "tsc -w",
+    "build": "tsc -p tsconfig.build.json && tsc-alias",
     "test": "jest",
     "cdk": "cdk",
-    "local": "npm run local:start && npm run local:build && npm run local:deploy",
-    "local:start": "localstack start -d",
-    "local:build": "cdklocal bootstrap --profile localstack",
-    "local:deploy": "cdklocal deploy --profile localstack"
+    "up": "localstack start",
+    "local": "npm run build && npm run local:init && npm run local:deploy",
+    "local:init": "cdklocal bootstrap --profile localstack --region eu-west-3",
+    "local:deploy": "cdklocal deploy --profile localstack --region eu-west-3 --require-approval never",
+    "init": "cdk bootstrap",
+    "deploy": "npm run build && npm run init && cdk deploy --region eu-west-3 --require-approval never"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.633.0",
     "@aws-sdk/client-sns": "^3.629.0",
     "@aws-sdk/client-sqs": "^3.598.0",
     "aws-cdk-lib": "2.144.0",
+    "aws-lambda": "^1.0.7",
     "constructs": "^10.0.0"
   },
   "devDependencies": {
+    "@types/aws-lambda": "^8.10.143",
     "@types/jest": "^29.5.12",
     "@types/node": "20.12.7",
     "aws-cdk": "2.144.0",
@@ -28,6 +32,7 @@
     "jest": "^29.7.0",
     "ts-jest": "^29.1.2",
     "ts-node": "^10.9.2",
+    "tsc-alias": "^1.8.10",
     "tsconfig-paths": "^4.2.0",
     "typescript": "~5.4.5"
   }
