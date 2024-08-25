@@ -1,6 +1,6 @@
 import { App, Stack, StackProps } from 'aws-cdk-lib';
 import * as sns from 'aws-cdk-lib/aws-sns';
-import { createSqsTolambdaConstruct } from './sqs-lambda-construct';
+import { addNewQueues } from './add-new-queues';
 
 // TODO: test ci cd with localstack (SNS filters --> messages in queue)
 export function createCdkStack(app: App, id: string, props?: StackProps): void {
@@ -13,5 +13,5 @@ export function createCdkStack(app: App, id: string, props?: StackProps): void {
   });
 
   // Create SQS to lambda constructs
-  createSqsTolambdaConstruct(stack, topic, 'all-status');
+  addNewQueues(stack, topic);
 }
