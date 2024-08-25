@@ -1,9 +1,7 @@
 import { deleteAllSqsMessages, getSqsMessages, sendSqsMessages } from '@/helpers/sqs/sqs';
-import { PublishCommand } from '@aws-sdk/client-sns';
-import { DeleteMessageCommand, ReceiveMessageCommand } from '@aws-sdk/client-sqs';
 import * as cdk from 'aws-cdk-lib';
 import { Template } from 'aws-cdk-lib/assertions';
-import { CdkStack } from '../src/cdk-stack';
+import { CdkStack } from '../lib/cdk-stack';
 import { TEST_QUEUE_URL } from './helper';
 
 describe('CreateServerlessAwsWebhook unit', () => {

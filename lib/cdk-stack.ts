@@ -8,9 +8,7 @@ import * as sqs from 'aws-cdk-lib/aws-sqs';
 import { Construct } from 'constructs';
 import * as path from 'path';
 
-// TODO: test ci cd with localstack
-// TODO: add bin lib folders
-// TODO: use a function instead of a class
+// TODO: test ci cd with localstack (SNS filters --> messages in queue)
 export class CdkStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);

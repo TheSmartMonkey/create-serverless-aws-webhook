@@ -1,9 +1,6 @@
 {
   "name": "create-serverless-aws-webhook",
   "version": "0.1.0",
-  "bin": {
-    "create-serverless-aws-webhook": "bin/create-serverless-aws-webhook.js"
-  },
   "scripts": {
     "build": "tsc -p tsconfig.build.json && tsc-alias",
     "test": "jest",

@@ -44,8 +44,8 @@ export async function deleteAllTestS3Buckets(): Promise<Bucket[]> {
 
 function initS3(): S3Client {
   if (client) return client;
-  // client = new S3Client({ region: 'eu-west-3' });
+  client = new S3Client({ region: 'eu-west-3' });
   // TODO: env variable for localstack
-  client = new S3Client({ region: 'eu-west-3', endpoint: 'http://127.0.0.1:4566' });
+  // client = new S3Client({ region: 'eu-west-3', endpoint: 'http://127.0.0.1:4566' });
   return client;
 }
