@@ -8,6 +8,7 @@ import * as sqs from 'aws-cdk-lib/aws-sqs';
 import * as path from 'path';
 
 export function createSqsTolambdaConstruct(stack: Stack, topic: sns.Topic, folder: string): void {
+  // TODO: stage + service name in name
   const dlqName = `${folder}-dlq`;
   const queueName = `${folder}-queue`;
   const functionName = `${folder}-function`;
@@ -21,7 +22,7 @@ export function createSqsTolambdaConstruct(stack: Stack, topic: sns.Topic, folde
   // SQS Queues
   const queue = new sqs.Queue(stack, queueName, {
     queueName,
-    visibilityTimeout: Duration.seconds(10),
+    visibilityTimeout: Duration.seconds(30),
     deadLetterQueue: {
       queue: dlq,
       maxReceiveCount: 3,
@@ -44,7 +45,7 @@ export function createSqsTolambdaConstruct(stack: Stack, topic: sns.Topic, folde
   lambdaFunction.addEventSource(
     new SqsEventSource(queue, {
       batchSize: 10,
-      maxBatchingWindow: Duration.seconds(10),
+      // maxBatchingWindow: Duration.seconds(10),
     }),
   );
   // allStatusFunction.addEventSource(new SqsEventSource(queue, { batchSize: 100, maxBatchingWindow: Duration.minutes(5) }));

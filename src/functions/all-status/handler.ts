@@ -8,6 +8,8 @@ export async function main(event: any) {
   console.log(event);
   const records = getMessagesFromSQSRecords<any>(event.Records);
   const bucketName = records[0].bucketName;
+
+  // TODO: create bucket in stack and add a file to it
   await createBucket(bucketName);
   console.log('Bucket created !');
 
