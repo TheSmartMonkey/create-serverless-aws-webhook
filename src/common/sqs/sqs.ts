@@ -1,4 +1,4 @@
-import { randomUUID } from '@/helpers/helper';
+import { randomUUID } from '@/common/helper';
 import {
   Message,
   PurgeQueueCommand,

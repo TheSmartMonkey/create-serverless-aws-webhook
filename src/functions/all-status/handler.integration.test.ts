@@ -2,7 +2,7 @@
  * @group unit
  */
 
-import { deleteAllTestS3Buckets, doesS3BucketExist } from '@/helpers/s3';
+import { deleteAllTestS3Buckets, doesS3BucketExist } from '@/common/s3';
 import { fakeBucketName } from '@test/fake';
 import { main } from './handler';
 

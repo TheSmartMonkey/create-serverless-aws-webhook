@@ -1,22 +1,16 @@
-import { createBucket } from '@/helpers/s3';
-import { getMessagesFromSQSRecords } from '@/helpers/sqs/sqs';
+import { createHandler } from '@/common/handler';
+import { logger } from '@/common/logger';
+import { getMessagesFromSQSRecords } from '@/common/sqs/sqs';
+import { HandlerResponse } from '@/models/handler.model';
 
-export async function main(event: any) {
-  console.log('All status hello !');
-
-  console.log('Creating bucket !');
-  console.log(event);
+// TODO: create bucket in stack and add a file to it
+export const handler = createHandler(async ({ event }: { event: any }): Promise<HandlerResponse<string>> => {
+  logger.info('Hello');
   const records = getMessagesFromSQSRecords<any>(event.Records);
-  const bucketName = records[0].bucketName;
-
-  // TODO: create bucket in stack and add a file to it
-  await createBucket(bucketName);
-  console.log('Bucket created !');
+  logger.info(records);
 
   return {
     statusCode: 200,
-    body: {
-      bucketName,
-    },
+    body: `Hello world`,
   };
-}
+});

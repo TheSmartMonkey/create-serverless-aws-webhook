@@ -2,6 +2,7 @@ import { Duration, Stack } from 'aws-cdk-lib';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import { SqsEventSource } from 'aws-cdk-lib/aws-lambda-event-sources';
+import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs';
 import * as sns from 'aws-cdk-lib/aws-sns';
 import * as subs from 'aws-cdk-lib/aws-sns-subscriptions';
 import * as sqs from 'aws-cdk-lib/aws-sqs';
@@ -34,11 +35,13 @@ export function createSqsTolambdaConstruct(stack: Stack, topic: sns.Topic, folde
 
   // Create the lambda function
   const lambdaRole = createLambdaRoles(stack);
-  const lambdaFunction = new lambda.Function(stack, functionName, {
+  const lambdaFunction = new NodejsFunction(stack, functionName, {
     functionName,
+    entry: path.resolve(__dirname, `../src/functions/${folder}/handler.ts`),
+    handler: 'handler',
     runtime: lambda.Runtime.NODEJS_20_X,
-    handler: `functions/${folder}/handler.main`,
-    code: lambda.Code.fromAsset(path.join(__dirname, '../dist')),
+    memorySize: 512,
+    timeout: Duration.seconds(20),
     role: lambdaRole,
   });
   queue.grantConsumeMessages(lambdaFunction);
@@ -48,6 +51,7 @@ export function createSqsTolambdaConstruct(stack: Stack, topic: sns.Topic, folde
       // maxBatchingWindow: Duration.seconds(10),
     }),
   );
+  // TODO: Prod env / dev env
   // allStatusFunction.addEventSource(new SqsEventSource(queue, { batchSize: 100, maxBatchingWindow: Duration.minutes(5) }));
 }
 

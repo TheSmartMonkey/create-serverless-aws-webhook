@@ -1,6 +1,6 @@
-import { deleteAllTestS3Buckets, doesS3BucketExist } from '@/helpers/s3';
-import { sendSnsMessage } from '@/helpers/sns';
-import { deleteAllSqsMessages, sendSqsMessages } from '@/helpers/sqs/sqs';
+import { deleteAllTestS3Buckets, doesS3BucketExist } from '@/common/s3';
+import { sendSnsMessage } from '@/common/sns';
+import { deleteAllSqsMessages, sendSqsMessages } from '@/common/sqs/sqs';
 import { TEST_QUEUE_URL, TEST_TOPIC_ARN, wait } from '@test/helper';
 import { fakeBucketName } from './fake';
 

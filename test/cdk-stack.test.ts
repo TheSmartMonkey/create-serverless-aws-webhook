@@ -1,8 +1,8 @@
-import { deleteAllSqsMessages, getSqsMessages, sendSqsMessages } from '@/helpers/sqs/sqs';
+import { deleteAllSqsMessages, getSqsMessages, sendSqsMessages } from '@/common/sqs/sqs';
 import * as cdk from 'aws-cdk-lib';
 import { Template } from 'aws-cdk-lib/assertions';
-import { CdkStack } from '../lib/cdk-stack';
 import { TEST_QUEUE_URL } from './helper';
+import { createCdkStack } from 'lib/cdk-stack';
 
 describe('CreateServerlessAwsWebhook unit', () => {
   beforeEach(async () => {
@@ -14,7 +14,7 @@ describe('CreateServerlessAwsWebhook unit', () => {
     const app = new cdk.App();
 
     // When
-    const stack = new CdkStack(app, 'MyTestStack');
+    const stack = createCdkStack(app, 'MyTestStack');
     const template = Template.fromStack(stack);
 
     // Then

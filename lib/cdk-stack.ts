@@ -5,7 +5,7 @@ import * as sns from 'aws-cdk-lib/aws-sns';
 import { addNewQueues } from './add-new-queues';
 
 // TODO: test ci cd with localstack (SNS filters --> messages in queue)
-export function createCdkStack(app: App, id: string, props?: StackProps): void {
+export function createCdkStack(app: App, id: string, props?: StackProps): Stack {
   const stack = new Stack(app, id, props);
 
   // SNS topic
@@ -81,4 +81,6 @@ export function createCdkStack(app: App, id: string, props?: StackProps): void {
 
   // Create SQS to lambda constructs
   addNewQueues(stack, topic);
+
+  return stack;
 }
