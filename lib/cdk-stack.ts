@@ -1,8 +1,11 @@
-import { App, Stack, StackProps } from 'aws-cdk-lib';
+import { App, Duration, Stack, StackProps } from 'aws-cdk-lib';
 import * as apigateway from 'aws-cdk-lib/aws-apigateway';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import * as sns from 'aws-cdk-lib/aws-sns';
+import * as sqs from 'aws-cdk-lib/aws-sqs';
+import * as subs from 'aws-cdk-lib/aws-sns-subscriptions'
 import { addNewQueues } from './add-new-queues';
+import { createLambdaRoles } from './sqs-to-lambda';
 
 // TODO: test ci cd with localstack (SNS filters --> messages in queue)
 export function createCdkStack(app: App, id: string, props?: StackProps): Stack {
@@ -12,7 +15,6 @@ export function createCdkStack(app: App, id: string, props?: StackProps): Stack 
   const topic = new sns.Topic(stack, `${stack.stackName}-topic`, {
     displayName: `${stack.stackName}-topic`,
     topicName: `${stack.stackName}-topic`,
-    // TODO: add a dlq to topic
   });
 
   new sns.TopicPolicy(stack, `${stack.stackName}-topic-policy`, {
@@ -79,7 +81,13 @@ export function createCdkStack(app: App, id: string, props?: StackProps): Stack 
   topic.grantPublish(apiGatewayRole);
 
   // Create SQS to lambda constructs
-  addNewQueues(stack, topic);
+  // TODO: add dlq alerte email if message in queue = 1 in the queue
+  const sqsFailureDlq = new sqs.Queue(stack, `${stack.stackName}-sqs-failure-dlq`, {
+    queueName: `${stack.stackName}-sqs-failure-dlq`,
+    retentionPeriod: Duration.days(14),
+  });
+  const lambdaRole = createLambdaRoles(stack);
+  addNewQueues(stack, topic, sqsFailureDlq, lambdaRole);
 
   return stack;
 }

@@ -8,12 +8,22 @@ import * as subs from 'aws-cdk-lib/aws-sns-subscriptions';
 import * as sqs from 'aws-cdk-lib/aws-sqs';
 import * as path from 'path';
 
-export function createSqsTolambdaConstruct(stack: Stack, topic: sns.Topic, folder: string): void {
+export function createSqsTolambda(
+  stack: Stack,
+  topic: sns.Topic,
+  sqsFailureDlq: sqs.Queue,
+  lambdaRole: iam.Role,
+  folder: string,
+  snsFilter: {
+    [attribute: string]: sns.FilterOrPolicy;
+  },
+): void {
   const dlqName = `${stack.stackName}-${folder}-dlq`;
   const queueName = `${stack.stackName}-${folder}-queue`;
   const functionName = `${stack.stackName}-${folder}-function`;
 
   // Dead Letter Queue
+  // TODO: add dlq alerte email if message in queue = 1 in the queue
   const dlq = new sqs.Queue(stack, dlqName, {
     queueName: dlqName,
     retentionPeriod: Duration.days(14),
@@ -30,10 +40,15 @@ export function createSqsTolambdaConstruct(stack: Stack, topic: sns.Topic, folde
   });
 
   // Topic subscription
-  topic.addSubscription(new subs.SqsSubscription(queue));
+  // TODO: add integration test in queue
+  topic.addSubscription(
+    new subs.SqsSubscription(queue, {
+      deadLetterQueue: sqsFailureDlq,
+      filterPolicyWithMessageBody: snsFilter,
+    }),
+  );
 
   // Create the lambda function
-  const lambdaRole = createLambdaRoles(stack);
   const lambdaFunction = new NodejsFunction(stack, functionName, {
     functionName,
     entry: path.resolve(__dirname, `../src/functions/${folder}/handler.ts`),
@@ -54,9 +69,9 @@ export function createSqsTolambdaConstruct(stack: Stack, topic: sns.Topic, folde
   // allStatusFunction.addEventSource(new SqsEventSource(queue, { batchSize: 100, maxBatchingWindow: Duration.minutes(5) }));
 }
 
-function createLambdaRoles(stack: Stack): iam.Role {
+export function createLambdaRoles(stack: Stack): iam.Role {
   // Lambda role
-  const lambdaRole = new iam.Role(stack, 'LambdaRole', {
+  const lambdaRole = new iam.Role(stack, `${stack.stackName}-lambda-role`, {
     assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),
   });
 

@@ -11,6 +11,6 @@ export const handler = createHandler(async ({ event }: { event: any }): Promise<
 
   return {
     statusCode: 200,
-    body: 'All status',
+    body: 'Done status',
   };
 });
