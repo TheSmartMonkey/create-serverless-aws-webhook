@@ -9,14 +9,13 @@ export function createCdkStack(app: App, id: string, props?: StackProps): Stack 
   const stack = new Stack(app, id, props);
 
   // SNS topic
-  const topic = new sns.Topic(stack, 'create-serverless-aws-webhook-topic', {
-    // TODO: stage + service name in name
-    displayName: 'create-serverless-aws-webhook-topic',
-    topicName: 'create-serverless-aws-webhook-topic',
+  const topic = new sns.Topic(stack, `${stack.stackName}-topic`, {
+    displayName: `${stack.stackName}-topic`,
+    topicName: `${stack.stackName}-topic`,
     // TODO: add a dlq to topic
   });
 
-  new sns.TopicPolicy(stack, 'TopicPolicy', {
+  new sns.TopicPolicy(stack, `${stack.stackName}-topic-policy`, {
     topics: [topic],
     policyDocument: new iam.PolicyDocument({
       statements: [
@@ -31,14 +30,14 @@ export function createCdkStack(app: App, id: string, props?: StackProps): Stack 
   });
 
   // Create API Gateway
-  const api = new apigateway.RestApi(stack, 'WebhookApi', {
-    restApiName: 'webhook-api',
+  const api = new apigateway.RestApi(stack, `${stack.stackName}-api`, {
+    restApiName: `${stack.stackName}-api`,
     description: 'This service receives webhooks and sends them to SNS.',
   });
 
   // Create API Gateway resource and method
   const webhookResource = api.root.addResource('webhook');
-  const apiGatewayRole = new iam.Role(stack, 'ApiGatewayRole', {
+  const apiGatewayRole = new iam.Role(stack, `${stack.stackName}-api-gateway-role`, {
     assumedBy: new iam.ServicePrincipal('apigateway.amazonaws.com'),
   });
 

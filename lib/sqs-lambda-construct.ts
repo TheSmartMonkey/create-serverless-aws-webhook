@@ -9,10 +9,9 @@ import * as sqs from 'aws-cdk-lib/aws-sqs';
 import * as path from 'path';
 
 export function createSqsTolambdaConstruct(stack: Stack, topic: sns.Topic, folder: string): void {
-  // TODO: stage + service name in name
-  const dlqName = `${folder}-dlq`;
-  const queueName = `${folder}-queue`;
-  const functionName = `${folder}-function`;
+  const dlqName = `${stack.stackName}-${folder}-dlq`;
+  const queueName = `${stack.stackName}-${folder}-queue`;
+  const functionName = `${stack.stackName}-${folder}-function`;
 
   // Dead Letter Queue
   const dlq = new sqs.Queue(stack, dlqName, {
