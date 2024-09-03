@@ -1,13 +1,11 @@
 import { createHandler } from '@/common/handler';
 import { logger } from '@/common/logger';
-import { getMessagesFromSQSRecords } from '@/common/sqs/sqs';
 import { HandlerResponse } from '@/models/handler.model';
+import { SQSEvent } from 'aws-lambda';
 
 // TODO: create bucket in stack and add a file to it
-export const handler = createHandler(async ({ event }: { event: any }): Promise<HandlerResponse<string>> => {
-  logger.info('Hello');
-  const records = getMessagesFromSQSRecords<any>(event.Records);
-  logger.info(records);
+export const handler = createHandler(async ({ event }: { event: SQSEvent }): Promise<HandlerResponse<string>> => {
+  logger.info({ event });
 
   return {
     statusCode: 200,

@@ -54,17 +54,20 @@ export function formatMessagesToBatchMessages<T>(messages: T[]): SendMessageBatc
   });
 }
 
-export function getMessagesFromSQSRecords<T>(sqsRecords: SQSRecord[]): T[] {
-  const messages = sqsRecords.map((sqsRecord) => getMessageFromSQSRecord(sqsRecord)) ?? [];
+export function getMessagesFromSQSRecords<T>(sqsRecords: SQSRecord[]): SqsMessages<T>[] {
+  const messages = sqsRecords.map((sqsRecord) => getMessageFromSQSRecord<SqsMessages<T>>(sqsRecord)) ?? [];
   console.info({ messages });
-  return messages as T[];
+  return messages as SqsMessages<T>[];
 }
 
-function getMessageFromSQSRecord<T>(sqsRecord: SQSRecord): T | undefined {
+function getMessageFromSQSRecord<T>(sqsRecord: SQSRecord): SqsMessages<T> | undefined {
   try {
     if (sqsRecord?.body) {
       const body = JSON.parse(sqsRecord?.body);
-      return JSON.parse(body.Message);
+      return {
+        messageId: sqsRecord?.messageId,
+        body: JSON.parse(body.Message),
+      };
     }
   } catch {
     console.error(sqsRecord?.body);
