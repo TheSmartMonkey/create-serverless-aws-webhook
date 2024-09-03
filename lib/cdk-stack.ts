@@ -1,14 +1,20 @@
+import { SsmEnv } from '@/models/env.model';
 import { App, Duration, Stack, StackProps } from 'aws-cdk-lib';
 import * as apigateway from 'aws-cdk-lib/aws-apigateway';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import * as sns from 'aws-cdk-lib/aws-sns';
 import * as sqs from 'aws-cdk-lib/aws-sqs';
+import * as ssm from 'aws-cdk-lib/aws-ssm';
 import { addNewQueues } from './add-new-queues';
 import { createLambdaRoles } from './sqs-to-lambda';
 
 // TODO: test ci cd with localstack (SNS filters --> messages in queue)
 export function createCdkStack(app: App, id: string, props?: StackProps): Stack {
   const stack = new Stack(app, id, props);
+
+  const secrets: SsmEnv = {
+    SSM_EXAMPLE: ssm.StringParameter.valueForStringParameter(stack, 'SSM_EXAMPLE'),
+  };
 
   // SNS topic
   const topic = new sns.Topic(stack, `${stack.stackName}-topic`, {

@@ -1,9 +1,8 @@
-import { DisassociatePhoneNumbersFromVoiceConnectorGroupResponse } from './../node_modules/aws-sdk/clients/chimesdkvoice.d';
-import { aws_lambda_destinations, Duration, Stack } from 'aws-cdk-lib';
+import { Duration, Stack } from 'aws-cdk-lib';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import { SqsEventSource } from 'aws-cdk-lib/aws-lambda-event-sources';
-import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs';
+import { NodejsFunction, NodejsFunctionProps } from 'aws-cdk-lib/aws-lambda-nodejs';
 import * as sns from 'aws-cdk-lib/aws-sns';
 import * as subs from 'aws-cdk-lib/aws-sns-subscriptions';
 import * as sqs from 'aws-cdk-lib/aws-sqs';
@@ -18,6 +17,7 @@ export function createSqsTolambda(
   snsFilter: {
     [attribute: string]: sns.FilterOrPolicy;
   },
+  { queueOptions, lambdaOptions }: { queueOptions?: sqs.QueueProps; lambdaOptions?: NodejsFunctionProps },
 ): void {
   const dlqName = `${stack.stackName}-${folder}-dlq`;
   const queueName = `${stack.stackName}-${folder}-queue`;
@@ -40,6 +40,7 @@ export function createSqsTolambda(
       // TODO: test maxReceiveCount
       maxReceiveCount: 3,
     },
+    ...queueOptions,
   });
 
   // Topic subscription
@@ -64,6 +65,10 @@ export function createSqsTolambda(
     role: lambdaRole,
     // TODO: cloudwatch logs retention 1 month and alerts
     // logRetention: logs.RetentionDays.ONE_MONTH,
+    environment: {
+      //https://www.youtube.com/watch?v=yJ74jWIH3rc
+    },
+    ...lambdaOptions,
   });
 
   queue.grantConsumeMessages(lambdaFunction);
