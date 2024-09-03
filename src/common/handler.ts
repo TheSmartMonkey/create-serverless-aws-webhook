@@ -35,13 +35,13 @@ export function createHandler<TOUTPUT>(
     } catch (error) {
       logger.error(error);
       if (error instanceof HandlerError) {
-        return {
+        throw {
           statusCode: error.statusCode,
           message: error.message,
           body: error?.error ? error?.error : error,
         } as HandlerResponse<any>;
       }
-      return {
+      throw {
         statusCode: 500,
         message: 'UNKNOWN_ERROR',
         body: error,

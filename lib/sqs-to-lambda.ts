@@ -1,4 +1,5 @@
-import { Duration, Stack } from 'aws-cdk-lib';
+import { DisassociatePhoneNumbersFromVoiceConnectorGroupResponse } from './../node_modules/aws-sdk/clients/chimesdkvoice.d';
+import { aws_lambda_destinations, Duration, Stack } from 'aws-cdk-lib';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import { SqsEventSource } from 'aws-cdk-lib/aws-lambda-event-sources';
@@ -33,8 +34,10 @@ export function createSqsTolambda(
   const queue = new sqs.Queue(stack, queueName, {
     queueName,
     visibilityTimeout: Duration.seconds(30),
+    // visibilityTimeout: Duration.minutes(15),
     deadLetterQueue: {
       queue: dlq,
+      // TODO: test maxReceiveCount
       maxReceiveCount: 3,
     },
   });
@@ -49,6 +52,7 @@ export function createSqsTolambda(
   );
 
   // Create the lambda function
+  // TODO: add lambda options in function attributes
   const lambdaFunction = new NodejsFunction(stack, functionName, {
     functionName,
     entry: path.resolve(__dirname, `../src/functions/${folder}/handler.ts`),
@@ -56,15 +60,22 @@ export function createSqsTolambda(
     runtime: lambda.Runtime.NODEJS_20_X,
     memorySize: 512,
     timeout: Duration.seconds(20),
+    reservedConcurrentExecutions: 5,
     role: lambdaRole,
+    // TODO: cloudwatch logs retention 1 month and alerts
+    // logRetention: logs.RetentionDays.ONE_MONTH,
   });
+
   queue.grantConsumeMessages(lambdaFunction);
   lambdaFunction.addEventSource(
     new SqsEventSource(queue, {
       batchSize: 10,
-      // maxBatchingWindow: Duration.seconds(10),
+      reportBatchItemFailures: true,
+      maxBatchingWindow: Duration.seconds(5),
+      // maxBatchingWindow: Duration.minutes(1),
     }),
   );
+
   // TODO: Prod env / dev env
   // allStatusFunction.addEventSource(new SqsEventSource(queue, { batchSize: 100, maxBatchingWindow: Duration.minutes(5) }));
 }

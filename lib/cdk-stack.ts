@@ -3,7 +3,6 @@ import * as apigateway from 'aws-cdk-lib/aws-apigateway';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import * as sns from 'aws-cdk-lib/aws-sns';
 import * as sqs from 'aws-cdk-lib/aws-sqs';
-import * as subs from 'aws-cdk-lib/aws-sns-subscriptions'
 import { addNewQueues } from './add-new-queues';
 import { createLambdaRoles } from './sqs-to-lambda';
 
